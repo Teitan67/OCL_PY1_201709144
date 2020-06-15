@@ -1,0 +1,11 @@
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\bin\Debug\PY1 IDE sql.exe.config
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\bin\Debug\PY1 IDE sql.exe
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\bin\Debug\PY1 IDE sql.pdb
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1 IDE sql.csprojAssemblyReference.cache
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1_IDE_sql.Form1.resources
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1_IDE_sql.Properties.Resources.resources
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1_IDE_sql.Ventanas.AcercaDe.resources
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1 IDE sql.csproj.GenerateResource.cache
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1 IDE sql.csproj.CoreCompileInputs.cache
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1 IDE sql.exe
+C:\Users\teita_000\source\repos\OCL_PY1_201709144\PY1 IDE sql\obj\Debug\PY1 IDE sql.pdb
