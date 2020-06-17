@@ -81,7 +81,7 @@ namespace PY1_IDE_sql
 
         private void ejecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             analizadorLexico = new Scaneer_201709144(richTextBox1.Text);
+            analizadorLexico = new Scaneer_201709144(richTextBox1.Text);
             mostrarTokensToolStripMenuItem.Enabled = true;
             mostrarErroresToolStripMenuItem.Enabled = true;
         }
@@ -94,6 +94,15 @@ namespace PY1_IDE_sql
         private void mostrarErroresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             analizadorLexico.reporteErrores();
+        }
+
+        private void cargarTablasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            archivo = new Archivo();
+            archivo.abrirArchivo();
+            richTextBox1.Text = archivo.contenido;
+            richTextBox1.Enabled = true;
+            activarBoton();
         }
     }
 }

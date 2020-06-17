@@ -35,14 +35,14 @@ namespace PY1_IDE_sql.Analizadores
             int cActual, cSiguiente;
             int estado = 0, ID = -666, fila=1,columna=0;
             String lexemaAux="";
-            for (int indice=0;indice<texto.Length-1;indice++) {
+            for (int indice=0;indice<texto.Length;indice++) {
                 cActual = texto.ElementAt(indice);
                 columna++;
                 if (cActual == 10) {
                     fila++;
                     columna = 0;
                 }
-                if (indice<texto.Length) {
+                if (indice<texto.Length-1) {
                     cSiguiente = texto.ElementAt(indice + 1);
                 }
                 else
@@ -52,7 +52,7 @@ namespace PY1_IDE_sql.Analizadores
                 if (estado==0) {
                     estado = qEstadoIr(cActual);
                 }
-                
+               // MessageBox.Show(estado.ToString()+" Caracter:"+cSiguiente.ToString());
                 switch (estado)
                 {
                     case -1:
@@ -90,6 +90,7 @@ namespace PY1_IDE_sql.Analizadores
                             } else if (cActual==33) {
                                 ID = 12;
                             }
+                            estado = 11;
                         }
                         else
                         {
@@ -98,6 +99,7 @@ namespace PY1_IDE_sql.Analizadores
                             } else if (cActual==62) {
                                 ID =13;
                             }
+                            estado = 0;
                         }
                         break;
                     case 4:
@@ -125,12 +127,12 @@ namespace PY1_IDE_sql.Analizadores
                         else 
                         {
                             ID = 1;
-                            estado = 11;
+                            estado = 0;
                         }
                         break;
                     case 6:
                         lexemaAux += caracter(cActual);
-                        if (cActual >= 65 && cActual <= 90 || cActual >= 97 && cActual <= 122 || cActual == 95 || cActual == 45)
+                        if (cSiguiente >= 65 && cSiguiente <= 90 || cSiguiente >= 97 && cSiguiente <= 122 || cSiguiente == 95 || cSiguiente == 45)
                         {
                             estado = 6;
                         }
@@ -138,6 +140,78 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             ID = 5;
                             estado = 0;
+                            if (lexemaAux.Equals("Eliminar", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID =18;
+                            }
+                            else if (lexemaAux.Equals("Y", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 19;
+                            }
+                            else if (lexemaAux.Equals("O", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 20;
+                            }
+                            else if (lexemaAux.Equals("Actualizar", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 21;
+                            }
+                            else if (lexemaAux.Equals("Establecer", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 22;
+                            }
+                            else if (lexemaAux.Equals("As", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 23;
+                            }
+                            else if (lexemaAux.Equals("De", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 24;
+                            }
+                            else if (lexemaAux.Equals("Donde", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 25;
+                            }
+                            else if (lexemaAux.Equals("Insertar", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 26;
+                            }
+                            else if (lexemaAux.Equals("En", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 27;
+                            }
+                            else if (lexemaAux.Equals("Valores", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 28;
+                            }
+                            else if (lexemaAux.Equals("Seleccionar", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 29;
+                            }
+                            else if (lexemaAux.Equals("Crear", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 30;
+                            }
+                            else if (lexemaAux.Equals("Tabla", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 31;
+                            }
+                            else if (lexemaAux.Equals("Entero", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 32;
+                            }
+                            else if (lexemaAux.Equals("Cadena", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 33;
+                            }
+                            else if (lexemaAux.Equals("Flotante", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 34;
+                            }
+                            else if (lexemaAux.Equals("Fecha", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ID = 35;
+                            }
                         }
                         break;
                     case 7:
@@ -151,13 +225,13 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case 8:
-                        if (cActual != 42)
+                        if (cActual != 45)
                         {
                             lexemaAux += caracter(cActual);
                         }
-                        if (cSiguiente == 42)
+                        if (cSiguiente == 10)
                         {
-                            estado = 30;
+                            estado = -1;
                         }
                         else
                         {
@@ -189,6 +263,22 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case 11:
+                        if (ID<0&&cActual==61) {
+                            ID = 17;                        
+                        }else if (cActual==46) {
+                            ID =11;
+                        }else if (cActual==42)
+                        {
+                            ID = 10;
+                        }else if (cActual==59){
+                            ID = 9;
+                        }else if (cActual==44){
+                            ID =8;
+                        }else if (cActual==40){
+                            ID = 6;
+                        }else if (cActual == 41){
+                            ID = 7;
+                        }
                         if (cActual!=34&&cActual!=39)
                         {
                             lexemaAux += caracter(cActual);
@@ -231,7 +321,7 @@ namespace PY1_IDE_sql.Analizadores
                         break;
                     case 15:
                         lexemaAux += caracter(cActual);
-                        if (cSiguiente ==39)
+                        if (cSiguiente==47)
                         {
                             estado = 16;
                         }
@@ -321,6 +411,7 @@ namespace PY1_IDE_sql.Analizadores
                         lexemaAux += caracter(cActual);
                         if (cSiguiente==39)
                         {
+                            ID = 3;
                             estado = 11;
                         }
                         else
@@ -335,6 +426,7 @@ namespace PY1_IDE_sql.Analizadores
                         lexemaAux += caracter(cActual);
                         break;
                 }
+                
                 if (estado == 0)
                 {
                     tSsimbolos.Add(new Token(ID,qTokenEs(ID),lexemaAux,fila,columna));
@@ -360,8 +452,9 @@ namespace PY1_IDE_sql.Analizadores
                     lexemaAux = "";
                 }
             }
+            Parser_201709144 sintactico = new Parser_201709144(this.tSsimbolos);
         }
-        private String qTokenEs(int id) {
+        public String qTokenEs(int id) {
             String aux = "";
             switch (id) {
                 case 1:
@@ -511,7 +604,7 @@ namespace PY1_IDE_sql.Analizadores
             }
             else if (caracter == 44)
             {
-                estado = 1;
+                estado = 11;
             }
             else if (caracter == 59)
             {
@@ -522,6 +615,10 @@ namespace PY1_IDE_sql.Analizadores
                 estado = 11;
             }
             else if (caracter == 40)
+            {
+                estado = 11;
+            }
+            else if (caracter==46) 
             {
                 estado = 11;
             }

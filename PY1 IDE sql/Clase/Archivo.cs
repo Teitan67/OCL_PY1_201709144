@@ -17,7 +17,7 @@ namespace PY1_IDE_sql.Clase
 
         public Archivo() {
             ventanaAbrir = new OpenFileDialog();
-            ventanaAbrir.Filter= "orvl Archivos|*.orvl";
+            ventanaAbrir.Filter= "orvl Archivo (*.orvl)|*.orvl|sqle Archivo (*.sqle)|*.sqle";
         }
         public void abrirArchivo() {
             if (ventanaAbrir.ShowDialog() == DialogResult.OK)
@@ -40,7 +40,7 @@ namespace PY1_IDE_sql.Clase
         }
         private void obtenerRuta() {
             ventanaGuardar = new SaveFileDialog();
-            ventanaGuardar.Filter = "orvl Archivo (*.orvl)|*.orvl";
+            ventanaGuardar.Filter = "orvl Archivo (*.orvl)|*.orvl|sqle Archivo (*.sqle)|*.sqle";
             if (ventanaGuardar.ShowDialog() == DialogResult.OK)
             {
                 this.ruta = ventanaGuardar.FileName;
