@@ -14,10 +14,11 @@ namespace PY1_IDE_sql.Analizadores
     class Scaneer_201709144
     {
         ArrayList tSsimbolos, tbl_errores;
-        int comentarios;
-        int errores;
-        int tokens;
-        String comentario="";
+        public int comentarios;
+        public int errores;
+        public int tokens;
+        public String comentario="";
+        public Parser_201709144 sintactico;
         public Scaneer_201709144(String contenido) {
             tSsimbolos = new ArrayList();
             tbl_errores = new ArrayList();
@@ -160,7 +161,7 @@ namespace PY1_IDE_sql.Analizadores
                             {
                                 ID = 22;
                             }
-                            else if (lexemaAux.Equals("As", StringComparison.OrdinalIgnoreCase))
+                            else if (lexemaAux.Equals("Como", StringComparison.OrdinalIgnoreCase))
                             {
                                 ID = 23;
                             }
@@ -255,7 +256,7 @@ namespace PY1_IDE_sql.Analizadores
                     case 10:
                         if (cSiguiente==47)
                         {
-                            estado = -1;
+                            estado = 30;
                         }
                         else 
                         {
@@ -437,7 +438,7 @@ namespace PY1_IDE_sql.Analizadores
                 }
                 else if (estado == -1)
                 {
-                    this.comentario += lexemaAux+"\n";
+                    this.comentario += "Comentario:"+lexemaAux+"\n<br>";
                     this.comentarios++;
                     estado = 0;
                     lexemaAux = "";
@@ -452,7 +453,7 @@ namespace PY1_IDE_sql.Analizadores
                     lexemaAux = "";
                 }
             }
-            Parser_201709144 sintactico = new Parser_201709144(this.tSsimbolos);
+            sintactico = new Parser_201709144(this.tSsimbolos);
         }
         public String qTokenEs(int id) {
             String aux = "";
@@ -629,7 +630,11 @@ namespace PY1_IDE_sql.Analizadores
             else if (caracter == 39)
             {
                 estado = 7;
-            } 
+            }
+            else if(caracter==42)
+            {
+                estado = 11;
+            }
             else if (caracter==32||caracter==10) 
             {
                 estado = -2;
@@ -650,18 +655,26 @@ namespace PY1_IDE_sql.Analizadores
             archivo.guardar(cabeza);
             Process.Start(archivo.ruta);
         }
-        public void generarReporte()
+        public void generarReporte(String html)
         {
 
-            String html;
+            
             if (tSsimbolos.Count <= 0)
             {
                 MessageBox.Show("No hay tokens registrados"); 
             }
             else
             {
-        
-                html = "";
+
+                html += "<table>\n" +
+                           "\t<tr id =\"Cabeza\">\n" +
+                           "\t<td> No.</td>\n" +
+                           "\t<td> ID </td>\n" +
+                           "\t<td> Token</td>\n" +
+                           "\t<td> Lexema</td>\n" +
+                           "\t<td> Columna</td>\n" +
+                           "\t<td> Fila </td>\n" +
+                           "\t</tr>\n";
                 for (int i = 0; i < tSsimbolos.Count; i++)
                 {
                     Token aux = (Token)tSsimbolos[i];
@@ -682,18 +695,26 @@ namespace PY1_IDE_sql.Analizadores
             }
             
         }
-        public void reporteErrores() {
-            String html;
-            if (errores > 0)
+        public void reporteErrores(String html) {
+            
+            if (errores > 0||sintactico.errores>0)
             {
-                html = "";
+                html+= "<table>\n"+
+                            "\t<tr id =\"Cabeza\">\n"+
+                            "\t<td> No.</td>\n"+
+                            "\t<td> ID </td>\n"+
+                            "\t<td> Token</td>\n"+
+                            "\t<td> Lexema</td>\n"+
+                            "\t<td> Columna</td>\n"+
+                            "\t<td> Fila </td>\n"+
+                            "\t</tr>\n";
                 TokenErrores aux;
                 for (int i = 0; i < tbl_errores.Count; i++)
                 {
                     aux = (TokenErrores)tbl_errores[i];
                     html += "\t<tr>\n";
                     html += "\t\t<td>" + i + "</td>\n";
-                    html += "\t\t<td>" + "-666" + "</td>\n";
+                    html += "\t\t<td>" + (int)aux.lexema.ElementAt(0) + "</td>\n";
                     html += "\t\t<td>" + "ERROR LEXICO: patron no reconocido" + "</td>\n";
                     html += "\t\t<td>" + aux.lexema + "</td>\n";
                     html += "\t\t<td>" + aux.columna + "</td>\n";
@@ -704,7 +725,7 @@ namespace PY1_IDE_sql.Analizadores
             }
             else
             {
-                MessageBox.Show("No hay errores lexicos registrados");
+                MessageBox.Show("No hay errores lexicos ni sintacticos registrados");
             }
         }
     }

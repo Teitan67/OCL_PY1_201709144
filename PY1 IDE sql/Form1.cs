@@ -2,6 +2,7 @@
 using PY1_IDE_sql.Clase;
 using PY1_IDE_sql.Ventanas;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,9 +18,11 @@ namespace PY1_IDE_sql
     {
         Archivo archivo;
         Scaneer_201709144 analizadorLexico;
+        ArrayList bancaDatos;
         public Form1()
         {
             InitializeComponent();
+            bancaDatos = new ArrayList();
            
         }
 
@@ -82,18 +85,20 @@ namespace PY1_IDE_sql
         private void ejecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             analizadorLexico = new Scaneer_201709144(richTextBox1.Text);
+            int erroes = analizadorLexico.sintactico.errores+analizadorLexico.errores;
             mostrarTokensToolStripMenuItem.Enabled = true;
             mostrarErroresToolStripMenuItem.Enabled = true;
+            MessageBox.Show("Analisis realizado!!\n Tokens:"+analizadorLexico.tokens+" Comentarios:"+analizadorLexico.comentarios+" Errores:"+erroes);
         }
 
         private void mostrarTokensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            analizadorLexico.generarReporte();
+            analizadorLexico.generarReporte("<p>"+ analizadorLexico .comentario+ "</p>");
         }
 
         private void mostrarErroresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            analizadorLexico.reporteErrores();
+            analizadorLexico.reporteErrores("<p>"+analizadorLexico.sintactico.ErrorSintactico+"</p>");
         }
 
         private void cargarTablasToolStripMenuItem_Click(object sender, EventArgs e)

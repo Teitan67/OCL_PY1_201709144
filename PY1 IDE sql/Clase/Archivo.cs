@@ -27,7 +27,7 @@ namespace PY1_IDE_sql.Clase
             }
         }
         public string leerArchivo(String fichero) {
-            return File.ReadAllText(fichero, Encoding.Default);
+            return File.ReadAllText(fichero, Encoding.UTF8);
             //MessageBox.Show(contenido);
         }
         public void guardar(String contenido) {

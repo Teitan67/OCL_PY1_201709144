@@ -11,8 +11,8 @@ namespace PY1_IDE_sql.Analizadores
 {
     class Parser_201709144
     {
-        String ErrorSintactico = "";
-        int errores=0;
+        public String ErrorSintactico = "";
+        public int errores=0;
         ArrayList Tokens;
         public Parser_201709144(ArrayList Tokens) {
             this.Tokens = Tokens;
@@ -29,8 +29,14 @@ namespace PY1_IDE_sql.Analizadores
                 case 26:
                     produccion = "A0";
                     break;
+                case 29:
+                    produccion = "B0";
+                    break;
                 case 18:
                     produccion = "C0";
+                    break;
+                case 21:
+                    produccion = "D0";
                     break;
                 default:
                     produccion = "Error";
@@ -53,14 +59,14 @@ namespace PY1_IDE_sql.Analizadores
                 }
                 cuenta++;
             }
-            ErrorSintactico += "\nModo Panico activado!!!"+
-                "\n"+cuenta+" tokens ignorados";
-            MessageBox.Show(ErrorSintactico);
+            ErrorSintactico += "Modo Panico activado!!!\n"+
+                "\n"+cuenta+ " tokens ignorados<br><br>";
+            //MessageBox.Show(ErrorSintactico);
             return regreso;
         }
         private void agregarError(Token aux,int id) {
-            ErrorSintactico +="Se esperaba "+qTokenEs(id)+" en vez de "+ aux.lexema+
-                "\n En Fila: "+aux.fila+" Columnas: "+aux.columna+"\n";
+            ErrorSintactico +="Syntax ERROR: Se esperaba "+qTokenEs(id)+" en vez de "+ aux.lexema+
+                "<br> En Fila: " + aux.fila+" Columnas: "+aux.columna+ "<br>";
         }
         public String qTokenEs(int id)
         {
@@ -180,6 +186,9 @@ namespace PY1_IDE_sql.Analizadores
                     break;
                 case -4:
                     aux = "Comparador";
+                    break;
+                case -5:
+                    aux = "Y o O";
                     break;
                 default:
                     aux = "No definido " + id.ToString();
@@ -303,7 +312,7 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 9)
                         {
                             produccion = "Y0";
-                            MessageBox.Show("Create aceptado");
+                            //MessageBox.Show("Create aceptado");
                             i++;
                         }
                         else
@@ -414,7 +423,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
-                            MessageBox.Show("Insertar aceptado"); 
+                           // MessageBox.Show("Insertar aceptado"); 
                         }
                         else
                         {
@@ -471,7 +480,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
-                            MessageBox.Show("Eliminar correcto");
+                            //MessageBox.Show("Eliminar correcto");
                         }
                         else
                         {
@@ -529,7 +538,488 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
-                            MessageBox.Show("Eliminar correcto");
+                           // MessageBox.Show("Eliminar correcto");
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D0":
+                        if (tActual == 21)
+                        {
+                            produccion = "D1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 21);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D1":
+                        if (tActual == 5)
+                        {
+                            produccion = "D2";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D2":
+                        if (tActual == 22)
+                        {
+                            produccion = "D3";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 22);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D3":
+                        if (tActual == 6)
+                        {
+                            produccion = "D4";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 6);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D4":
+                        if (tActual == 5)
+                        {
+                            produccion = "D5";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D5":
+                        if (tActual == 17)
+                        {
+                            produccion = "D6";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 17);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D6":
+                        if (tActual == 1|| tActual == 2|| tActual == 3|| tActual == 4)
+                        {
+                            produccion = "D7";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -2);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D7":
+                        if (tActual == 8)
+                        {
+                            produccion = "D4";
+                            i++;
+                        }
+                        else if (tActual==7) 
+                        {
+                            produccion = "D8";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -3);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D8":
+                        if (tActual == 25)
+                        {
+                            produccion = "D9";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 25);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D9":
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
+                        {
+                            produccion = "D11";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -2);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D11":
+                        if (tActual == 17 || tActual == 13 || tActual == 14 || tActual == 15 || tActual == 16 || tActual == 12)
+                        {
+                            produccion = "D12";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -4);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D12":
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
+                        {
+                            produccion = "D13";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -2);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "D13":
+                        if (tActual == 19 || tActual == 20)
+                        {
+                            produccion = "D9";
+                            i++;
+                        }
+                        else if (tActual == 9)
+                        {
+                            produccion = "Y0";
+                            i++;
+                           // MessageBox.Show("Actualizar correcto");
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B0":
+                        if (tActual==29) 
+                        {
+                            produccion = "B1";
+                            i++;
+                        } 
+                        else
+                        {
+                            agregarError(temporal2, 29);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B1":
+                        if (tActual == 10)
+                        {
+                            produccion = "B6";
+                            i++;
+                        }
+                        else if(tActual==5)
+                        {
+                            produccion = "B2";
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B2":
+                        if (tActual == 5)
+                        {
+                            produccion = "B2.1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B2.1":
+                        if (tActual == 11)
+                        {
+                            produccion = "B2.2";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 11);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B2.2":
+                        if (tActual == 5)
+                        {
+                            produccion = "B3";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B3":
+                        if (tActual == 24)
+                        {
+                            produccion = "B6";
+                        }
+                        else if (tActual == 8)
+                        {
+                            produccion = "B5";
+                        }
+                        else if (tActual==23) {
+                            produccion ="B4";
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 24);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B4":
+                        if (tActual == 23)
+                        {
+                            produccion = "B4.1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 23);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B4.1":
+                        if (tActual == 5)
+                        {
+                            produccion = "B5";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B5":
+                        if (tActual == 8)
+                        {
+                            produccion = "B2";
+                            i++;
+                        }
+                        else if (tActual==24) 
+                        {
+                            produccion = "B6";
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 24);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B6":
+                        if (tActual == 24)
+                        {
+                            produccion = "B6.1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 24);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B6.1":
+                        if (tActual == 5)
+                        {
+                            produccion = "B7";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B7":
+                        if (tActual == 9)
+                        {
+                            produccion = "Y0";
+                            i++;
+                           // MessageBox.Show("Seleccionar aceptado");
+                        }
+                        else if (tActual==25) 
+                        {
+                            produccion ="B8";
+                            i++;
+                        }
+                        else if (tActual==8)
+                        {
+                            i++;
+                            produccion ="B6.1";
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 9);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B8":
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 )
+                        {
+                            produccion = "B9";
+                            i++;
+                        }
+                        else if (tActual==5) 
+                        {
+                            produccion = "B8.1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -2);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B8.1":
+                        if (tActual == 11)
+                        {
+                            produccion = "B8.2";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 11);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B8.2":
+                        if (tActual == 5)
+                        {
+                            produccion = "B9";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    //
+                    case "B9":
+                        if (tActual == 17 || tActual == 13 || tActual == 14 || tActual == 15 || tActual == 16 || tActual == 12)
+                        {
+                            produccion = "B10";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -4);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B10":
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 )
+                        {
+                            produccion = "B11";
+                            i++;
+                        }else if (tActual==5) 
+                        {
+                            produccion = "B10.1";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, -2);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B10.1":
+                        if (tActual == 11)
+                        {
+                            produccion = "B10.2";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 11);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B10.2":
+                        if (tActual == 5)
+                        {
+                            produccion = "B11";
+                            i++;
+                        }
+                        else
+                        {
+                            agregarError(temporal2, 5);
+                            i = modoPanico(i);
+                            produccion = "Y0";
+                        }
+                        break;
+                    case "B11":
+                        if (tActual == 19 || tActual == 20)
+                        {
+                            produccion = "B8";
+                            i++;
+                        }
+                        else if (tActual == 9)
+                        {
+                            produccion = "Y0";
+                            i++;
+                           // MessageBox.Show("SELECCIONAR correcto");
                         }
                         else
                         {
