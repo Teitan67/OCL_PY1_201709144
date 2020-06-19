@@ -11,9 +11,8 @@ namespace PY1_IDE_sql.Clase
     {
         public String nombreTabla;
         public ArrayList columnas;
-        public Tabla(String nombre)
+        public Tabla()
         {
-            this.nombreTabla = nombre;
             columnas = new ArrayList();
         }
     }

@@ -14,9 +14,16 @@ namespace PY1_IDE_sql.Analizadores
         public String ErrorSintactico = "";
         public int errores=0;
         ArrayList Tokens;
-        public Parser_201709144(ArrayList Tokens) {
+        public ArrayList tablas;
+        ArrayList datosAux;
+        Tabla tabAux;
+        int indexTabla = -1;
+        public Parser_201709144(ArrayList Tokens, ArrayList tablas) {
+            
             this.Tokens = Tokens;
+            this.tablas = tablas;
             analizador(this.Tokens);
+            
         }
         private String qProduccionEs(int token)
         {
@@ -196,11 +203,50 @@ namespace PY1_IDE_sql.Analizadores
             }
             return aux;
         }
+        private int buscarTabla(String tabla)
+        {
+            int aux = -1;
+            Tabla auxTabla;
+            for (int i=0;i<tablas.Count;i++) {
+                auxTabla =(Tabla) tablas[i];
+                if (auxTabla.nombreTabla.Equals(tabla, StringComparison.OrdinalIgnoreCase)) 
+                {
+                    aux = i;
+                    break;
+                }
+            }
+            return aux;
+        }
+        public void imprimirTabla(int i)
+        {
+            String impresion = "";
+            Tabla aux =(Tabla)tablas[i];
+            impresion += aux.nombreTabla+"\n";
+            for (int indice=0;indice<aux.columnas.Count;indice++)
+            {
+                ColumnaTabla aux2 = (ColumnaTabla)aux.columnas[indice];
+                impresion += "\t"+aux2.titulo+"\t";  
+            }
+            impresion += "\n";
+            ColumnaTabla auxa2 = (ColumnaTabla)aux.columnas[0];
+            for (int a = 0; auxa2.datos.Count > a; a++)
+            {
+                for (int indice = 0; indice < aux.columnas.Count; indice++)
+                {
+                    ColumnaTabla auxa2s = (ColumnaTabla)aux.columnas[indice];
+                    impresion += "\t" + auxa2s.datos[a] + "\t";
+                }
+                impresion += "\n";
+            }
+            MessageBox.Show(impresion+": ");
+        }
         private void analizador(ArrayList token) 
         {
             String produccion = "Y0";
             Token temporal2;
+            Token temporal;
             int tActual;
+
             for (int i=0; i<token.Count;) 
             {
                 temporal2 = (Token)token[i];
@@ -216,6 +262,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "S1";
                             i++;
+                            
                         }
                         else
                         {
@@ -228,6 +275,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "S1":
                         if (tActual==31)
                         {
+                            tabAux = new Tabla();
                             produccion = "S2";
                             i++;
                         }
@@ -241,6 +289,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "S2":
                         if (tActual == 5)
                         {
+                            tabAux.nombreTabla=temporal2.lexema;
                             produccion = "S3";
                             i++;
                         }
@@ -267,6 +316,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "S4":
                         if (tActual == 5)
                         {
+                            
                             produccion = "S5";
                             i++;
                         }
@@ -280,6 +330,9 @@ namespace PY1_IDE_sql.Analizadores
                     case "S5":
                         if (tActual ==32|| tActual == 33|| tActual == 34|| tActual == 35)
                         {
+                            temporal = (Token)token[i-1];
+                            tabAux.columnas.Add(new ColumnaTabla(temporal.lexema, temporal2.lexema));
+                            //MessageBox.Show("Columnas:"+tabAux.columnas.Count);
                             produccion = "S6";
                             i++;
                         }
@@ -312,7 +365,9 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 9)
                         {
                             produccion = "Y0";
-                            //MessageBox.Show("Create aceptado");
+                            this.tablas.Add(tabAux);
+                            
+                           // MessageBox.Show("Tabla creada: "+tablas.Count);
                             i++;
                         }
                         else
@@ -326,6 +381,7 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 26)
                         {
                             produccion = "A1";
+                            datosAux = new ArrayList();
                             i++;
                         }
                         else
@@ -352,6 +408,8 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 5)
                         {
                             produccion = "A3";
+                            indexTabla= buscarTabla(temporal2.lexema);
+                           // MessageBox.Show("Tabla encontrada:"+indexTabla);
                             i++;
                         }
                         else
@@ -390,6 +448,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "A5":
                         if (tActual == 1|| tActual == 2|| tActual == 3|| tActual == 4)
                         {
+                            datosAux.Add(temporal2.lexema);
                             produccion = "A6";
                             i++;
                         }
@@ -421,6 +480,28 @@ namespace PY1_IDE_sql.Analizadores
                     case "A7":
                         if (tActual == 9)
                         {
+                            //MessageBox.Show("Indice" + indexTabla);
+                            if (indexTabla >= 0)
+                            {
+                                Tabla temp = (Tabla)tablas[indexTabla];
+                               // MessageBox.Show("Datos auxiliares" + datosAux.Count);
+                               // MessageBox.Show("Datos reales" + temp.columnas.Count);
+                                for (int s=0;s<temp.columnas.Count;s++)
+                                {
+                                    ColumnaTabla columna= (ColumnaTabla) temp.columnas[s];
+                                    columna.datos.Add(datosAux[s]);
+                                    temp.columnas[s] = columna;
+                                }
+                                tablas[indexTabla] = temp;
+                                ColumnaTabla columssnas = (ColumnaTabla)temp.columnas[0];
+                                //MessageBox.Show("No de columnas" + temp.columnas.Count);
+                                //MessageBox.Show("No de datos" + columssnas.datos.Count);
+                                // MessageBox.Show("Insertar aceptado");
+                            }
+                            else
+                            {
+                                MessageBox.Show("No existe la tabla para insertar "+indexTabla);
+                            }
                             produccion = "Y0";
                             i++;
                            // MessageBox.Show("Insertar aceptado"); 

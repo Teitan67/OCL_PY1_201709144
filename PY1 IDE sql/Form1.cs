@@ -22,8 +22,8 @@ namespace PY1_IDE_sql
         public Form1()
         {
             InitializeComponent();
-            bancaDatos = new ArrayList();
-           
+            this.bancaDatos = new ArrayList();
+
         }
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -84,11 +84,13 @@ namespace PY1_IDE_sql
 
         private void ejecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            analizadorLexico = new Scaneer_201709144(richTextBox1.Text);
+            analizadorLexico = new Scaneer_201709144(richTextBox1.Text, this.bancaDatos);
             int erroes = analizadorLexico.sintactico.errores+analizadorLexico.errores;
             mostrarTokensToolStripMenuItem.Enabled = true;
             mostrarErroresToolStripMenuItem.Enabled = true;
             MessageBox.Show("Analisis realizado!!\n Tokens:"+analizadorLexico.tokens+" Comentarios:"+analizadorLexico.comentarios+" Errores:"+erroes);
+            analizadorLexico.sintactico.imprimirTabla(0);
+            bancaDatos = analizadorLexico.tablas;
         }
 
         private void mostrarTokensToolStripMenuItem_Click(object sender, EventArgs e)

@@ -14,12 +14,14 @@ namespace PY1_IDE_sql.Analizadores
     class Scaneer_201709144
     {
         ArrayList tSsimbolos, tbl_errores;
+        public ArrayList tablas;
         public int comentarios;
         public int errores;
         public int tokens;
         public String comentario="";
         public Parser_201709144 sintactico;
-        public Scaneer_201709144(String contenido) {
+        public Scaneer_201709144(String contenido, ArrayList bancaDatos) {
+            this.tablas = bancaDatos;
             tSsimbolos = new ArrayList();
             tbl_errores = new ArrayList();
             comentarios = 0;
@@ -453,7 +455,8 @@ namespace PY1_IDE_sql.Analizadores
                     lexemaAux = "";
                 }
             }
-            sintactico = new Parser_201709144(this.tSsimbolos);
+            sintactico = new Parser_201709144(this.tSsimbolos, this.tablas);
+            
         }
         public String qTokenEs(int id) {
             String aux = "";
