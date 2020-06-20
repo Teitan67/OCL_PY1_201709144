@@ -63,6 +63,26 @@ namespace PY1_IDE_sql.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _386b0468204388f7fbee894147d6012c {
+            get {
+                object obj = ResourceManager.GetObject("386b0468204388f7fbee894147d6012c", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap graphviz {
+            get {
+                object obj = ResourceManager.GetObject("graphviz", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap hombre {
             get {
                 object obj = ResourceManager.GetObject("hombre", resourceCulture);

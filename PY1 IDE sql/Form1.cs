@@ -72,24 +72,22 @@ namespace PY1_IDE_sql
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            vScrollBar1.Maximum =pictureBox1.Height-this.Height+150;
+            hScrollBar1.Maximum =pictureBox1.Width - this.Width+600;
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void pintar() 
         {
             
-            
-            
         }
-
         private void ejecutarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             analizadorLexico = new Scaneer_201709144(richTextBox1.Text, this.bancaDatos);
             int erroes = analizadorLexico.sintactico.errores+analizadorLexico.errores;
             mostrarTokensToolStripMenuItem.Enabled = true;
             mostrarErroresToolStripMenuItem.Enabled = true;
             MessageBox.Show("Analisis realizado!!\n Tokens:"+analizadorLexico.tokens+" Comentarios:"+analizadorLexico.comentarios+" Errores:"+erroes);
-            analizadorLexico.sintactico.imprimirTabla(0);
+            //richTextBox1.Text= analizadorLexico.sintactico.imprimirTabla(0);
             bancaDatos = analizadorLexico.tablas;
         }
 
@@ -110,6 +108,16 @@ namespace PY1_IDE_sql
             richTextBox1.Text = archivo.contenido;
             richTextBox1.Enabled = true;
             activarBoton();
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            pictureBox1.Top =-vScrollBar1.Value+50;
+        }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            pictureBox1.Left= -hScrollBar1.Value +600;
         }
     }
 }

@@ -16,7 +16,9 @@ namespace PY1_IDE_sql.Analizadores
         ArrayList Tokens;
         public ArrayList tablas;
         ArrayList datosAux;
+        ArrayList tablasAux;
         Tabla tabAux;
+        Boolean asterisco=false;
         int indexTabla = -1;
         public Parser_201709144(ArrayList Tokens, ArrayList tablas) {
             
@@ -219,27 +221,30 @@ namespace PY1_IDE_sql.Analizadores
         }
         public void imprimirTabla(int i)
         {
-            String impresion = "";
+            String impresion = "digraph {tbl [ shape=plaintext label=< <table border='0' cellborder='0'  cellspacing='0'>";
             Tabla aux =(Tabla)tablas[i];
-            impresion += aux.nombreTabla+"\n";
+            impresion +=" \n<tr><td>"+ aux.nombreTabla + "</td></tr>\n";
+            impresion += "<tr><td cellpadding='1'><table  cellspacing='0'><tr>";
             for (int indice=0;indice<aux.columnas.Count;indice++)
             {
                 ColumnaTabla aux2 = (ColumnaTabla)aux.columnas[indice];
-                impresion += "\t"+aux2.titulo+"\t";  
+                impresion += "<td>"+aux2.titulo+"</td>";  
             }
-            impresion += "\n";
+            impresion += "</tr>";
             ColumnaTabla auxa2 = (ColumnaTabla)aux.columnas[0];
             for (int a = 0; auxa2.datos.Count > a; a++)
             {
+                impresion +="<tr>";
                 for (int indice = 0; indice < aux.columnas.Count; indice++)
                 {
                     ColumnaTabla auxa2s = (ColumnaTabla)aux.columnas[indice];
-                    impresion += "\t" + auxa2s.datos[a] + "\t";
+                    impresion += "<td>" + auxa2s.datos[a] + "</td>";
                 }
-                impresion += "\n";
+                impresion += "</tr>";
             }
-            MessageBox.Show(impresion+": ");
+            impresion += " </table> </td></tr></table>>];}";
         }
+
         private void analizador(ArrayList token) 
         {
             String produccion = "Y0";
@@ -824,6 +829,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B1":
                         if (tActual == 10)
                         {
+                            asterisco = true;
                             produccion = "B6";
                             i++;
                         }
@@ -942,6 +948,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6":
                         if (tActual == 24)
                         {
+                            tablasAux = new ArrayList();
                             produccion = "B6.1";
                             i++;
                         }
@@ -955,6 +962,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6.1":
                         if (tActual == 5)
                         {
+                            tablasAux.Add(temporal2.lexema);
                             produccion = "B7";
                             i++;
                         }
@@ -968,6 +976,8 @@ namespace PY1_IDE_sql.Analizadores
                     case "B7":
                         if (tActual == 9)
                         {
+
+
                             produccion = "Y0";
                             i++;
                            // MessageBox.Show("Seleccionar aceptado");
