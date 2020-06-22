@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,10 +18,12 @@ namespace PY1_IDE_sql.Analizadores
         ArrayList Tokens;
         public ArrayList tablas;
         ArrayList datosAux;
-        ArrayList tablasAux;
+        ArrayList auxColumnas=new ArrayList();
+        ArrayList alias = new ArrayList();
         Tabla tabAux;
         Boolean asterisco=false;
         int indexTabla = -1;
+        String impresionColumna = "digraph {tbl [shape=plaintext label=< <table color='white' ><tr>";
         public Parser_201709144(ArrayList Tokens, ArrayList tablas) {
             
             this.Tokens = Tokens;
@@ -244,14 +248,121 @@ namespace PY1_IDE_sql.Analizadores
             }
             impresion += " </table> </td></tr></table>>];}";
         }
+        private Tabla obtenerTabla(String nombre) 
+        {
+            Tabla auxiliar = null;
+            for (int i = 0; i < tablas.Count; i++)
+            {
+                auxiliar = (Tabla)tablas[i];
+                if (auxiliar.nombreTabla.Equals(nombre, StringComparison.OrdinalIgnoreCase))
+                {
+                    i = tablas.Count;
+                    break;
+                }
+                else
+                {
+                    auxiliar = null;
+                }
+            }
+            return auxiliar;
+        }
+        private ColumnaTabla obtenerColumna(Tabla tabla,String nombre) {
+            ColumnaTabla aux = null;
+            for (int i=0;i<tabla.columnas.Count;i++) 
+            {
+                aux = (ColumnaTabla)tabla.columnas[i];
+                if (aux.titulo.Equals(nombre, StringComparison.OrdinalIgnoreCase))
+                {
+                    i = tabla.columnas.Count;
+                    break;
+                }
+                else
+                {
+                    aux = null;
+                }
+            }
+            return aux;
+        }
+        public String imprimir()
+        {
+            this.impresionColumna += "</tr></table> >]; }";
+            return this.impresionColumna;
+        }
+        public void generarColumna(String tabla,String columna,String alias) 
+        {
+            String texto = " <td><table cellspacing='0' >";
+            Tabla auxTabla = obtenerTabla(tabla);
+            if (auxTabla!=null)
+            {
+                ColumnaTabla auxColumna = obtenerColumna(auxTabla, columna);
+                if (auxColumna!=null)
+                {
+                    if (alias.Equals("")) {
+                        texto += "<tr><td>" + columna + "</td></tr>";
+                    }
+                    else
+                    {
+                        texto += "<tr><td>" + alias + "</td></tr>";
+                    } 
+                    for (int i=0;i< auxColumna.datos.Count;i++) 
+                    {
+                        texto += "<tr><td>"+auxColumna.datos[i]+"</td></tr>";
+                    }
+                    texto += "</table> </td>";
+                    this.impresionColumna += texto;
+                }
+                else
+                {
+                    MessageBox.Show("No existe la columna "+columna+" en la tabla "+tabla);
+                }
+            }
+            else 
+            {
+                MessageBox.Show("La tabla "+tabla+" no existe");
+            }
+            
+        }
+        private void imprimirTodo(ArrayList tablas)
+        {
+            Tabla auxiliar = null;
+            ColumnaTabla auxColumna = null;
+            for (int i=0;i<tablas.Count;i++)
+            {
+                auxiliar = obtenerTabla(tablas[i].ToString());
 
+                for (int j=0;j<auxiliar.columnas.Count;j++)
+                {
+                    auxColumna =(ColumnaTabla) auxiliar.columnas[j];
+                    generarColumna(auxiliar.nombreTabla,auxColumna.titulo,"");
+                }
+            }
+        }
+        private void eliminarTodo(String nombre)
+        {
+            Tabla aux = obtenerTabla(nombre);
+            for (int i=0;i<aux.columnas.Count;i++) {
+                ColumnaTabla aux2= (ColumnaTabla)aux.columnas[i];
+                aux2.datos = new ArrayList();
+            }
+        }
+        private void imprimirColumnas(ArrayList columnas,ArrayList alias)
+        {
+            TablaColumna aux = null;
+            for (int i=0;i<columnas.Count;i++) {
+                aux = (TablaColumna)columnas[i];
+                generarColumna(aux.tabla,aux.columna,alias[i].ToString());
+            }
+        }
         private void analizador(ArrayList token) 
         {
+            ArrayList auxColumnas = new ArrayList();
+            ArrayList auxTablas = new ArrayList(); 
             String produccion = "Y0";
+            String nomTabla="",nomColumna="";
             Token temporal2;
             Token temporal;
             int tActual;
-
+            impresionColumna = "digraph {tbl [shape=plaintext label=< <table margin='0' color='white' ><tr>";
             for (int i=0; i<token.Count;) 
             {
                 temporal2 = (Token)token[i];
@@ -548,6 +659,7 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 5)
                         {
                             produccion = "C3";
+                            nomTabla = temporal2.lexema;
                             i++;
                         }
                         else
@@ -566,6 +678,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
+                            eliminarTodo(nomTabla);
                             //MessageBox.Show("Eliminar correcto");
                         }
                         else
@@ -813,6 +926,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "Y0";
                         }
                         break;
+                        //Rubi
                     case "B0":
                         if (tActual==29) 
                         {
@@ -844,11 +958,13 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "Y0";
                         }
                         break;
+                        //rubi
                     case "B2":
                         if (tActual == 5)
                         {
                             produccion = "B2.1";
                             i++;
+                            nomTabla = temporal2.lexema;
                         }
                         else
                         {
@@ -873,6 +989,8 @@ namespace PY1_IDE_sql.Analizadores
                     case "B2.2":
                         if (tActual == 5)
                         {
+                            nomColumna = temporal2.lexema;
+                            auxColumnas.Add(new TablaColumna(nomTabla,nomColumna,""));
                             produccion = "B3";
                             i++;
                         }
@@ -886,10 +1004,12 @@ namespace PY1_IDE_sql.Analizadores
                     case "B3":
                         if (tActual == 24)
                         {
+                            alias.Add("");
                             produccion = "B6";
                         }
                         else if (tActual == 8)
                         {
+                            alias.Add("");
                             produccion = "B5";
                         }
                         else if (tActual==23) {
@@ -918,6 +1038,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B4.1":
                         if (tActual == 5)
                         {
+                            alias.Add(temporal2.lexema);
                             produccion = "B5";
                             i++;
                         }
@@ -948,7 +1069,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6":
                         if (tActual == 24)
                         {
-                            tablasAux = new ArrayList();
+                            
                             produccion = "B6.1";
                             i++;
                         }
@@ -962,7 +1083,8 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6.1":
                         if (tActual == 5)
                         {
-                            tablasAux.Add(temporal2.lexema);
+                            
+                            auxTablas.Add(temporal2.lexema);
                             produccion = "B7";
                             i++;
                         }
@@ -976,8 +1098,18 @@ namespace PY1_IDE_sql.Analizadores
                     case "B7":
                         if (tActual == 9)
                         {
-
-
+                            if (asterisco) 
+                            {
+                                imprimirTodo(auxTablas);
+                                asterisco = false;
+                            }
+                            else 
+                            {
+                                imprimirColumnas(auxColumnas,alias);
+                            }
+                            generarImagen();
+                            auxColumnas = new ArrayList();
+                            alias = new ArrayList();
                             produccion = "Y0";
                             i++;
                            // MessageBox.Show("Seleccionar aceptado");
@@ -1126,6 +1258,14 @@ namespace PY1_IDE_sql.Analizadores
                         break;
                 }
             }
+        }
+
+        private void generarImagen() {
+            this.impresionColumna += "</tr></table> >]; }";
+            Archivo temporar = new Archivo();
+            temporar.ruta = "C:\\PY1\\Consulta.txt";
+            temporar.guardar(this.impresionColumna);
+            Process.Start("C:\\PY1\\generador.bat");
         }
     }
 }

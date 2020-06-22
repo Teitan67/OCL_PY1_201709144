@@ -51,6 +51,7 @@
     <Compile Include="Clase\Archivo.cs" />
     <Compile Include="Clase\ColumnaTabla.cs" />
     <Compile Include="Clase\Tabla.cs" />
+    <Compile Include="Clase\TablaColumna.cs" />
     <Compile Include="Clase\Token.cs" />
     <Compile Include="Clase\TokenErrores.cs" />
     <Compile Include="Form1.cs">
