@@ -49,7 +49,9 @@
     <Compile Include="Analizadores\Parser_201709144.cs" />
     <Compile Include="Analizadores\Scaneer_201709144.cs" />
     <Compile Include="Clase\Archivo.cs" />
+    <Compile Include="Clase\ColumnaDato.cs" />
     <Compile Include="Clase\ColumnaTabla.cs" />
+    <Compile Include="Clase\Condicion.cs" />
     <Compile Include="Clase\Tabla.cs" />
     <Compile Include="Clase\TablaColumna.cs" />
     <Compile Include="Clase\Token.cs" />

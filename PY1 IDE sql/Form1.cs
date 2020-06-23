@@ -195,8 +195,7 @@ namespace PY1_IDE_sql
             MessageBox.Show("Analisis realizado!!\n Tokens:"+analizadorLexico.tokens+" Comentarios:"+analizadorLexico.comentarios+" Errores:"+erroes);
             //richTextBox1.Text= analizadorLexico.sintactico.imprimir();
             bancaDatos = analizadorLexico.tablas;
-            
-
+            // actualizar(String tabla,ArrayList columnaDato, ArrayList condicionales)
         }
 
         private void mostrarTokensToolStripMenuItem_Click(object sender, EventArgs e)

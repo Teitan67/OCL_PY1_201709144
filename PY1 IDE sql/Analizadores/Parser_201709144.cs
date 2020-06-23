@@ -14,22 +14,22 @@ namespace PY1_IDE_sql.Analizadores
     class Parser_201709144
     {
         public String ErrorSintactico = "";
-        public int errores=0;
+        public int errores = 0;
         ArrayList Tokens;
         public ArrayList tablas;
         ArrayList datosAux;
-        ArrayList auxColumnas=new ArrayList();
+        ArrayList auxColumnas = new ArrayList();
         ArrayList alias = new ArrayList();
         Tabla tabAux;
-        Boolean asterisco=false;
+        Boolean asterisco = false;
         int indexTabla = -1;
         String impresionColumna = "digraph {tbl [shape=plaintext label=< <table color='white' ><tr>";
         public Parser_201709144(ArrayList Tokens, ArrayList tablas) {
-            
+
             this.Tokens = Tokens;
             this.tablas = tablas;
             analizador(this.Tokens);
-            
+
         }
         private String qProduccionEs(int token)
         {
@@ -63,23 +63,23 @@ namespace PY1_IDE_sql.Analizadores
             int cuenta = 0;
             errores++;
             int regreso = this.Tokens.Count;
-            for (int j = i; j < this.Tokens.Count;j++)
+            for (int j = i; j < this.Tokens.Count; j++)
             {
                 temporal2 = (Token)Tokens[j];
-                if (temporal2.id==9) {
-                    regreso = j+1;
+                if (temporal2.id == 9) {
+                    regreso = j + 1;
                     break;
                 }
                 cuenta++;
             }
-            ErrorSintactico += "Modo Panico activado!!!\n"+
-                "\n"+cuenta+ " tokens ignorados<br><br>";
+            ErrorSintactico += "Modo Panico activado!!!\n" +
+                "\n" + cuenta + " tokens ignorados<br><br>";
             //MessageBox.Show(ErrorSintactico);
             return regreso;
         }
-        private void agregarError(Token aux,int id) {
-            ErrorSintactico +="Syntax ERROR: Se esperaba "+qTokenEs(id)+" en vez de "+ aux.lexema+
-                "<br> En Fila: " + aux.fila+" Columnas: "+aux.columna+ "<br>";
+        private void agregarError(Token aux, int id) {
+            ErrorSintactico += "Syntax ERROR: Se esperaba " + qTokenEs(id) + " en vez de " + aux.lexema +
+                "<br> En Fila: " + aux.fila + " Columnas: " + aux.columna + "<br>";
         }
         public String qTokenEs(int id)
         {
@@ -213,9 +213,9 @@ namespace PY1_IDE_sql.Analizadores
         {
             int aux = -1;
             Tabla auxTabla;
-            for (int i=0;i<tablas.Count;i++) {
-                auxTabla =(Tabla) tablas[i];
-                if (auxTabla.nombreTabla.Equals(tabla, StringComparison.OrdinalIgnoreCase)) 
+            for (int i = 0; i < tablas.Count; i++) {
+                auxTabla = (Tabla)tablas[i];
+                if (auxTabla.nombreTabla.Equals(tabla, StringComparison.OrdinalIgnoreCase))
                 {
                     aux = i;
                     break;
@@ -226,19 +226,19 @@ namespace PY1_IDE_sql.Analizadores
         public void imprimirTabla(int i)
         {
             String impresion = "digraph {tbl [ shape=plaintext label=< <table border='0' cellborder='0'  cellspacing='0'>";
-            Tabla aux =(Tabla)tablas[i];
-            impresion +=" \n<tr><td>"+ aux.nombreTabla + "</td></tr>\n";
+            Tabla aux = (Tabla)tablas[i];
+            impresion += " \n<tr><td>" + aux.nombreTabla + "</td></tr>\n";
             impresion += "<tr><td cellpadding='1'><table  cellspacing='0'><tr>";
-            for (int indice=0;indice<aux.columnas.Count;indice++)
+            for (int indice = 0; indice < aux.columnas.Count; indice++)
             {
                 ColumnaTabla aux2 = (ColumnaTabla)aux.columnas[indice];
-                impresion += "<td>"+aux2.titulo+"</td>";  
+                impresion += "<td>" + aux2.titulo + "</td>";
             }
             impresion += "</tr>";
             ColumnaTabla auxa2 = (ColumnaTabla)aux.columnas[0];
             for (int a = 0; auxa2.datos.Count > a; a++)
             {
-                impresion +="<tr>";
+                impresion += "<tr>";
                 for (int indice = 0; indice < aux.columnas.Count; indice++)
                 {
                     ColumnaTabla auxa2s = (ColumnaTabla)aux.columnas[indice];
@@ -248,7 +248,7 @@ namespace PY1_IDE_sql.Analizadores
             }
             impresion += " </table> </td></tr></table>>];}";
         }
-        private Tabla obtenerTabla(String nombre) 
+        private Tabla obtenerTabla(String nombre)
         {
             Tabla auxiliar = null;
             for (int i = 0; i < tablas.Count; i++)
@@ -266,21 +266,28 @@ namespace PY1_IDE_sql.Analizadores
             }
             return auxiliar;
         }
-        private ColumnaTabla obtenerColumna(Tabla tabla,String nombre) {
+        private ColumnaTabla obtenerColumna(Tabla tabla, String nombre) {
             ColumnaTabla aux = null;
-            for (int i=0;i<tabla.columnas.Count;i++) 
-            {
-                aux = (ColumnaTabla)tabla.columnas[i];
-                if (aux.titulo.Equals(nombre, StringComparison.OrdinalIgnoreCase))
+            if (tabla.columnas!=null) {
+                for (int i = 0; i < tabla.columnas.Count; i++)
                 {
-                    i = tabla.columnas.Count;
-                    break;
-                }
-                else
-                {
-                    aux = null;
+                    aux = (ColumnaTabla)tabla.columnas[i];
+                    if (aux.titulo.Equals(nombre, StringComparison.OrdinalIgnoreCase))
+                    {
+                        i = tabla.columnas.Count;
+                        break;
+                    }
+                    else
+                    {
+                        aux = null;
+                    }
                 }
             }
+            else
+            {
+                MessageBox.Show("No se econtro columnas en tabla "+tabla);
+            }
+           
             return aux;
         }
         public String imprimir()
@@ -288,14 +295,14 @@ namespace PY1_IDE_sql.Analizadores
             this.impresionColumna += "</tr></table> >]; }";
             return this.impresionColumna;
         }
-        public void generarColumna(String tabla,String columna,String alias) 
+        public void generarColumna(String tabla, String columna, String alias)
         {
             String texto = " <td><table cellspacing='0' >";
             Tabla auxTabla = obtenerTabla(tabla);
-            if (auxTabla!=null)
+            if (auxTabla != null)
             {
                 ColumnaTabla auxColumna = obtenerColumna(auxTabla, columna);
-                if (auxColumna!=null)
+                if (auxColumna != null)
                 {
                     if (alias.Equals("")) {
                         texto += "<tr><td>" + columna + "</td></tr>";
@@ -303,93 +310,100 @@ namespace PY1_IDE_sql.Analizadores
                     else
                     {
                         texto += "<tr><td>" + alias + "</td></tr>";
-                    } 
-                    for (int i=0;i< auxColumna.datos.Count;i++) 
+                    }
+                    for (int i = 0; i < auxColumna.datos.Count; i++)
                     {
-                        texto += "<tr><td>"+auxColumna.datos[i]+"</td></tr>";
+                        if(!auxColumna.datos[i].Equals(" "))
+                        {
+                            texto += "<tr><td>" + auxColumna.datos[i] + "</td></tr>";
+                        }  
                     }
                     texto += "</table> </td>";
                     this.impresionColumna += texto;
                 }
                 else
                 {
-                    MessageBox.Show("No existe la columna "+columna+" en la tabla "+tabla);
+                    MessageBox.Show("No existe la columna " + columna + " en la tabla " + tabla);
                 }
             }
-            else 
+            else
             {
-                MessageBox.Show("La tabla "+tabla+" no existe");
+                MessageBox.Show("La tabla " + tabla + " no existe");
             }
-            
+
         }
         private void imprimirTodo(ArrayList tablas)
         {
             Tabla auxiliar = null;
             ColumnaTabla auxColumna = null;
-            for (int i=0;i<tablas.Count;i++)
+            for (int i = 0; i < tablas.Count; i++)
             {
                 auxiliar = obtenerTabla(tablas[i].ToString());
 
-                for (int j=0;j<auxiliar.columnas.Count;j++)
+                for (int j = 0; j < auxiliar.columnas.Count; j++)
                 {
-                    auxColumna =(ColumnaTabla) auxiliar.columnas[j];
-                    generarColumna(auxiliar.nombreTabla,auxColumna.titulo,"");
+                    auxColumna = (ColumnaTabla)auxiliar.columnas[j];
+                    generarColumna(auxiliar.nombreTabla, auxColumna.titulo, "");
                 }
             }
         }
         private void eliminarTodo(String nombre)
         {
             Tabla aux = obtenerTabla(nombre);
-            for (int i=0;i<aux.columnas.Count;i++) {
-                ColumnaTabla aux2= (ColumnaTabla)aux.columnas[i];
+            for (int i = 0; i < aux.columnas.Count; i++) {
+                ColumnaTabla aux2 = (ColumnaTabla)aux.columnas[i];
                 aux2.datos = new ArrayList();
             }
         }
-        private void imprimirColumnas(ArrayList columnas,ArrayList alias)
+        private void imprimirColumnas(ArrayList columnas, ArrayList alias)
         {
             TablaColumna aux = null;
-            for (int i=0;i<columnas.Count;i++) {
+            for (int i = 0; i < columnas.Count; i++) {
                 aux = (TablaColumna)columnas[i];
-                generarColumna(aux.tabla,aux.columna,alias[i].ToString());
+                generarColumna(aux.tabla, aux.columna, alias[i].ToString());
             }
         }
-        private void analizador(ArrayList token) 
+        private void analizador(ArrayList token)
         {
             ArrayList auxColumnas = new ArrayList();
-            ArrayList auxTablas = new ArrayList(); 
+            ArrayList auxTablas = new ArrayList();
+            ArrayList columnaDato = new ArrayList();
+            ArrayList condiciones = new ArrayList();
+            ArrayList YOs = new ArrayList();
+            //cabeza
             String produccion = "Y0";
-            String nomTabla="",nomColumna="";
+            String nomTabla = "", nomColumna="", nuevoDato="",condicion="",dato;
             Token temporal2;
             Token temporal;
             int tActual;
             impresionColumna = "digraph {tbl [shape=plaintext label=< <table margin='0' color='white' ><tr>";
-            for (int i=0; i<token.Count;) 
+            for (int i = 0; i < token.Count;)
             {
                 temporal2 = (Token)token[i];
                 tActual = temporal2.id;
-                if (produccion.Equals("Y0")) 
+                if (produccion.Equals("Y0"))
                 {
                     produccion = qProduccionEs(tActual);
                 }
-                switch (produccion) 
+                switch (produccion)
                 {
                     case "S0":
-                        if (tActual==30)
+                        if (tActual == 30)
                         {
                             produccion = "S1";
                             i++;
-                            
+
                         }
                         else
                         {
-                            agregarError(temporal2,30);
+                            agregarError(temporal2, 30);
                             i = modoPanico(i);
                             produccion = "Y0";
 
                         }
                         break;
                     case "S1":
-                        if (tActual==31)
+                        if (tActual == 31)
                         {
                             tabAux = new Tabla();
                             produccion = "S2";
@@ -405,7 +419,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "S2":
                         if (tActual == 5)
                         {
-                            tabAux.nombreTabla=temporal2.lexema;
+                            tabAux.nombreTabla = temporal2.lexema;
                             produccion = "S3";
                             i++;
                         }
@@ -432,7 +446,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "S4":
                         if (tActual == 5)
                         {
-                            
+
                             produccion = "S5";
                             i++;
                         }
@@ -444,9 +458,9 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "S5":
-                        if (tActual ==32|| tActual == 33|| tActual == 34|| tActual == 35)
+                        if (tActual == 32 || tActual == 33 || tActual == 34 || tActual == 35)
                         {
-                            temporal = (Token)token[i-1];
+                            temporal = (Token)token[i - 1];
                             tabAux.columnas.Add(new ColumnaTabla(temporal.lexema, temporal2.lexema));
                             //MessageBox.Show("Columnas:"+tabAux.columnas.Count);
                             produccion = "S6";
@@ -465,7 +479,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "S4";
                             i++;
                         }
-                        else if(tActual==7)
+                        else if (tActual == 7)
                         {
                             produccion = "S7";
                             i++;
@@ -482,8 +496,8 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             this.tablas.Add(tabAux);
-                            
-                           // MessageBox.Show("Tabla creada: "+tablas.Count);
+
+                            // MessageBox.Show("Tabla creada: "+tablas.Count);
                             i++;
                         }
                         else
@@ -524,8 +538,8 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 5)
                         {
                             produccion = "A3";
-                            indexTabla= buscarTabla(temporal2.lexema);
-                           // MessageBox.Show("Tabla encontrada:"+indexTabla);
+                            indexTabla = buscarTabla(temporal2.lexema);
+                            // MessageBox.Show("Tabla encontrada:"+indexTabla);
                             i++;
                         }
                         else
@@ -562,7 +576,7 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "A5":
-                        if (tActual == 1|| tActual == 2|| tActual == 3|| tActual == 4)
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4)
                         {
                             datosAux.Add(temporal2.lexema);
                             produccion = "A6";
@@ -600,11 +614,11 @@ namespace PY1_IDE_sql.Analizadores
                             if (indexTabla >= 0)
                             {
                                 Tabla temp = (Tabla)tablas[indexTabla];
-                               // MessageBox.Show("Datos auxiliares" + datosAux.Count);
-                               // MessageBox.Show("Datos reales" + temp.columnas.Count);
-                                for (int s=0;s<temp.columnas.Count;s++)
+                                // MessageBox.Show("Datos auxiliares" + datosAux.Count);
+                                // MessageBox.Show("Datos reales" + temp.columnas.Count);
+                                for (int s = 0; s < temp.columnas.Count; s++)
                                 {
-                                    ColumnaTabla columna= (ColumnaTabla) temp.columnas[s];
+                                    ColumnaTabla columna = (ColumnaTabla)temp.columnas[s];
                                     columna.datos.Add(datosAux[s]);
                                     temp.columnas[s] = columna;
                                 }
@@ -616,11 +630,11 @@ namespace PY1_IDE_sql.Analizadores
                             }
                             else
                             {
-                                MessageBox.Show("No existe la tabla para insertar "+indexTabla);
+                                MessageBox.Show("No existe la tabla para insertar " + indexTabla);
                             }
                             produccion = "Y0";
                             i++;
-                           // MessageBox.Show("Insertar aceptado"); 
+                            // MessageBox.Show("Insertar aceptado"); 
                         }
                         else
                         {
@@ -674,7 +688,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "C4";
                             i++;
-                        }else if (tActual==9) 
+                        } else if (tActual == 9)
                         {
                             produccion = "Y0";
                             i++;
@@ -683,14 +697,15 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         else
                         {
-                            agregarError(temporal2,9);
+                            agregarError(temporal2, 9);
                             i = modoPanico(i);
                             produccion = "Y0";
                         }
                         break;
                     case "C4":
-                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4||tActual==5)
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
                         {
+                            nomColumna = temporal2.lexema;
                             produccion = "C5";
                             i++;
                         }
@@ -704,6 +719,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "C5":
                         if (tActual == 17 || tActual == 13 || tActual == 14 || tActual == 15 || tActual == 16 || tActual == 12)
                         {
+                            condicion = temporal2.lexema;
                             produccion = "C6";
                             i++;
                         }
@@ -717,6 +733,8 @@ namespace PY1_IDE_sql.Analizadores
                     case "C6":
                         if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
                         {
+                            dato = temporal2.lexema;
+                            condiciones.Add(new Condicion(nomColumna,condicion,dato));
                             produccion = "C7";
                             i++;
                         }
@@ -728,16 +746,20 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "C7":
-                        if (tActual == 19||tActual==20)
+                        if (tActual == 19 || tActual == 20)
                         {
+                            YOs.Add(temporal2.lexema);
                             produccion = "C4";
                             i++;
                         }
                         else if (tActual == 9)
                         {
+                            // condicion(String tabla,String columna,String comparador,String dato)
+                            //eliminar(String tabla, ArrayList condicionales, ArrayList Y_O)
+                            eliminar(nomTabla,condiciones,YOs);
                             produccion = "Y0";
                             i++;
-                           // MessageBox.Show("Eliminar correcto");
+                            // MessageBox.Show("Eliminar correcto");
                         }
                         else
                         {
@@ -762,6 +784,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D1":
                         if (tActual == 5)
                         {
+                            nomTabla =temporal2.lexema;
                             produccion = "D2";
                             i++;
                         }
@@ -801,6 +824,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D4":
                         if (tActual == 5)
                         {
+                            nomColumna = temporal2.lexema;
                             produccion = "D5";
                             i++;
                         }
@@ -825,8 +849,9 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "D6":
-                        if (tActual == 1|| tActual == 2|| tActual == 3|| tActual == 4)
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4)
                         {
+                            columnaDato.Add(new ColumnaDato(nomColumna,temporal2.lexema));
                             produccion = "D7";
                             i++;
                         }
@@ -843,7 +868,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "D4";
                             i++;
                         }
-                        else if (tActual==7) 
+                        else if (tActual == 7)
                         {
                             produccion = "D8";
                             i++;
@@ -858,6 +883,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D8":
                         if (tActual == 25)
                         {
+                            
                             produccion = "D9";
                             i++;
                         }
@@ -871,6 +897,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D9":
                         if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
                         {
+                            nomColumna = temporal2.lexema;
                             produccion = "D11";
                             i++;
                         }
@@ -884,6 +911,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D11":
                         if (tActual == 17 || tActual == 13 || tActual == 14 || tActual == 15 || tActual == 16 || tActual == 12)
                         {
+                            condicion = temporal2.lexema;
                             produccion = "D12";
                             i++;
                         }
@@ -897,6 +925,10 @@ namespace PY1_IDE_sql.Analizadores
                     case "D12":
                         if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 || tActual == 5)
                         {
+                            dato = temporal2.lexema;
+                            condiciones.Add(new Condicion(nomColumna,condicion,dato));
+
+
                             produccion = "D13";
                             i++;
                         }
@@ -910,6 +942,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "D13":
                         if (tActual == 19 || tActual == 20)
                         {
+                            YOs.Add(temporal2.lexema);
                             produccion = "D9";
                             i++;
                         }
@@ -917,7 +950,8 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
-                           // MessageBox.Show("Actualizar correcto");
+                            actualizar(nomTabla,columnaDato,condiciones,YOs);
+                            // MessageBox.Show("Actualizar correcto");
                         }
                         else
                         {
@@ -926,13 +960,13 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "Y0";
                         }
                         break;
-                        //Rubi
+                    //Rubi
                     case "B0":
-                        if (tActual==29) 
+                        if (tActual == 29)
                         {
                             produccion = "B1";
                             i++;
-                        } 
+                        }
                         else
                         {
                             agregarError(temporal2, 29);
@@ -947,7 +981,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "B6";
                             i++;
                         }
-                        else if(tActual==5)
+                        else if (tActual == 5)
                         {
                             produccion = "B2";
                         }
@@ -958,7 +992,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "Y0";
                         }
                         break;
-                        //rubi
+                    //rubi
                     case "B2":
                         if (tActual == 5)
                         {
@@ -990,7 +1024,7 @@ namespace PY1_IDE_sql.Analizadores
                         if (tActual == 5)
                         {
                             nomColumna = temporal2.lexema;
-                            auxColumnas.Add(new TablaColumna(nomTabla,nomColumna,""));
+                            auxColumnas.Add(new TablaColumna(nomTabla, nomColumna, ""));
                             produccion = "B3";
                             i++;
                         }
@@ -1012,8 +1046,8 @@ namespace PY1_IDE_sql.Analizadores
                             alias.Add("");
                             produccion = "B5";
                         }
-                        else if (tActual==23) {
-                            produccion ="B4";
+                        else if (tActual == 23) {
+                            produccion = "B4";
                         }
                         else
                         {
@@ -1055,7 +1089,7 @@ namespace PY1_IDE_sql.Analizadores
                             produccion = "B2";
                             i++;
                         }
-                        else if (tActual==24) 
+                        else if (tActual == 24)
                         {
                             produccion = "B6";
                         }
@@ -1069,7 +1103,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6":
                         if (tActual == 24)
                         {
-                            
+
                             produccion = "B6.1";
                             i++;
                         }
@@ -1083,7 +1117,7 @@ namespace PY1_IDE_sql.Analizadores
                     case "B6.1":
                         if (tActual == 5)
                         {
-                            
+
                             auxTablas.Add(temporal2.lexema);
                             produccion = "B7";
                             i++;
@@ -1098,31 +1132,31 @@ namespace PY1_IDE_sql.Analizadores
                     case "B7":
                         if (tActual == 9)
                         {
-                            if (asterisco) 
+                            if (asterisco)
                             {
                                 imprimirTodo(auxTablas);
                                 asterisco = false;
                             }
-                            else 
+                            else
                             {
-                                imprimirColumnas(auxColumnas,alias);
+                                imprimirColumnas(auxColumnas, alias);
                             }
                             generarImagen();
                             auxColumnas = new ArrayList();
                             alias = new ArrayList();
                             produccion = "Y0";
                             i++;
-                           // MessageBox.Show("Seleccionar aceptado");
+                            // MessageBox.Show("Seleccionar aceptado");
                         }
-                        else if (tActual==25) 
+                        else if (tActual == 25)
                         {
-                            produccion ="B8";
+                            produccion = "B8";
                             i++;
                         }
-                        else if (tActual==8)
+                        else if (tActual == 8)
                         {
                             i++;
-                            produccion ="B6.1";
+                            produccion = "B6.1";
                         }
                         else
                         {
@@ -1132,12 +1166,12 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "B8":
-                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 )
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4)
                         {
                             produccion = "B9";
                             i++;
                         }
-                        else if (tActual==5) 
+                        else if (tActual == 5)
                         {
                             produccion = "B8.1";
                             i++;
@@ -1190,11 +1224,11 @@ namespace PY1_IDE_sql.Analizadores
                         }
                         break;
                     case "B10":
-                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4 )
+                        if (tActual == 1 || tActual == 2 || tActual == 3 || tActual == 4)
                         {
                             produccion = "B11";
                             i++;
-                        }else if (tActual==5) 
+                        } else if (tActual == 5)
                         {
                             produccion = "B10.1";
                             i++;
@@ -1242,7 +1276,7 @@ namespace PY1_IDE_sql.Analizadores
                         {
                             produccion = "Y0";
                             i++;
-                           // MessageBox.Show("SELECCIONAR correcto");
+                            // MessageBox.Show("SELECCIONAR correcto");
                         }
                         else
                         {
@@ -1253,8 +1287,8 @@ namespace PY1_IDE_sql.Analizadores
                         break;
                     default:
                         i = modoPanico(i);
-                        ErrorSintactico += " Se esperaba una palabra de inicio Crear, insertar, actualizar, seleccionar o eliminar en vez de" +temporal2.lexema;
-                        produccion ="Y0";
+                        ErrorSintactico += " Se esperaba una palabra de inicio Crear, insertar, actualizar, seleccionar o eliminar en vez de" + temporal2.lexema;
+                        produccion = "Y0";
                         break;
                 }
             }
@@ -1266,6 +1300,146 @@ namespace PY1_IDE_sql.Analizadores
             temporar.ruta = "C:\\PY1\\Consulta.txt";
             temporar.guardar(this.impresionColumna);
             Process.Start("C:\\PY1\\generador.bat");
+        }
+
+
+        private ArrayList condicion(String tabla,String columna,String comparador,String dato)
+        {
+            ArrayList aux = new ArrayList();
+            Tabla auxTab = obtenerTabla(tabla);
+            ColumnaTabla auxCol = obtenerColumna(auxTab,columna);
+            for (int i=0;i<auxCol.datos.Count;i++)
+            {
+                if (auxCol.datos[i].ToString().Equals(dato))
+                {
+                    aux.Add(i);
+                }
+            }
+            return aux;
+        }
+        public void actualizar(String tabla,ArrayList columnaDato, ArrayList condicionales,ArrayList Y_O ) {
+            Tabla auxTab = obtenerTabla(tabla);
+            ArrayList indices = new ArrayList();
+            ColumnaDato auxColDato= null;
+            for (int indexC=0;indexC<condicionales.Count;indexC++) {
+                if (indexC==0)
+                {
+                    Condicion conAux = (Condicion)condicionales[indexC];
+                    indices = condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2);
+                   // MessageBox.Show("indice: "+ indexC + " columna1 "+conAux.columna1+ " comparador "+conAux.condicion+" dato2 "+ conAux.dato2);
+                   
+                }
+                else
+                {
+                    if (Y_O[indexC-1].ToString().Equals("Y"))
+                    {
+                        Condicion conAux = (Condicion)condicionales[indexC];
+                        indices = and(indices, condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2));
+                    }
+                    else
+                    {
+                        Condicion conAux = (Condicion)condicionales[indexC];
+                        indices = or(indices, condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2));
+                       // MessageBox.Show("columna2 " + conAux.columna1 + " comparador " + conAux.condicion + " dato2 " + conAux.dato2);
+                    }
+                }
+               
+            }
+            for (int i=0;i<indices.Count;i++)
+            {
+                int index = (int)indices[i];
+                for (int ii=0;ii<columnaDato.Count;ii++) {
+                    auxColDato = (ColumnaDato)columnaDato[ii];
+                    
+                    ColumnaTabla auxCol = obtenerColumna(auxTab,auxColDato.columna);
+                   
+                    auxCol.datos[index] =auxColDato.dato;
+                    
+                }
+                // MessageBox.Show("Cuenta:auxCol.datos[index]);
+            }
+        }
+
+        public  ArrayList and(ArrayList comparacion1, ArrayList comparacion2)
+        {
+            ArrayList regreso=new ArrayList();
+            for (int i = 0; i < comparacion1.Count; i++)
+            {
+                for (int ii = 0; ii < comparacion2.Count; ii++) {
+                    if (comparacion1[i].Equals(comparacion2[ii])) {
+                        regreso.Add(comparacion2[ii]);
+                    }
+                }
+            }
+            return regreso;
+        }
+        public ArrayList or(ArrayList comparacion1, ArrayList comparacion2)
+        {
+            ArrayList regreso = new ArrayList();
+            for (int i=0;i<comparacion1.Count;i++) 
+            {
+                regreso.Add(comparacion1[i]);
+            }
+            for (int i = 0; i < comparacion2.Count; i++)
+            {
+                regreso.Add(comparacion2[i]);
+            }
+            return regreso;
+        }
+
+        public void eliminar(String tabla, ArrayList condicionales, ArrayList Y_O)
+        {
+            Tabla auxTab = obtenerTabla(tabla);
+            ArrayList indices = new ArrayList();
+            ColumnaTabla auxDatos = null;
+            for (int indexC = 0; indexC < condicionales.Count; indexC++)
+            {
+                if (indexC == 0)
+                {
+                    Condicion conAux = (Condicion)condicionales[indexC];
+                    indices = condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2);
+                    // MessageBox.Show("indice: "+ indexC + " columna1 "+conAux.columna1+ " comparador "+conAux.condicion+" dato2 "+ conAux.dato2);
+
+                }
+                else
+                {
+                    if (Y_O[indexC - 1].ToString().Equals("Y"))
+                    {
+                        Condicion conAux = (Condicion)condicionales[indexC];
+                        indices = and(indices, condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2));
+                    }
+                    else
+                    {
+                        Condicion conAux = (Condicion)condicionales[indexC];
+                        indices = or(indices, condicion(tabla, conAux.columna1, conAux.condicion, conAux.dato2));
+                        // MessageBox.Show("columna2 " + conAux.columna1 + " comparador " + conAux.condicion + " dato2 " + conAux.dato2);
+                    }
+                }
+
+            }
+            for (int i = indices.Count-1; i >= 0; i--)
+            {
+                int index = (int)indices[i];
+                for (int ii = 0; ii < auxTab.columnas.Count; ii++)
+                {
+                    auxDatos = (ColumnaTabla)auxTab.columnas[ii];
+                    auxDatos.datos[index]=" ";
+
+                }
+               
+
+                // MessageBox.Show("Cuenta:auxCol.datos[index]);
+            }
+            for (int ii = 0; ii < auxTab.columnas.Count; ii++)
+            {
+                auxDatos = (ColumnaTabla)auxTab.columnas[ii];
+                for (int i=0;i<auxDatos.datos.Count;i++)
+                {
+                    auxDatos.datos.Remove(" ");
+                }
+                
+
+            }
         }
     }
 }
