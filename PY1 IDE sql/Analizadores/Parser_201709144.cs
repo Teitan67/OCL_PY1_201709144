@@ -1293,7 +1293,6 @@ namespace PY1_IDE_sql.Analizadores
                 }
             }
         }
-
         private void generarImagen() {
             this.impresionColumna += "</tr></table> >]; }";
             Archivo temporar = new Archivo();
@@ -1301,8 +1300,6 @@ namespace PY1_IDE_sql.Analizadores
             temporar.guardar(this.impresionColumna);
             Process.Start("C:\\PY1\\generador.bat");
         }
-
-
         private ArrayList condicion(String tabla,String columna,String comparador,String dato)
         {
             ArrayList aux = new ArrayList();

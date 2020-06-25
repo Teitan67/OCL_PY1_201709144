@@ -195,19 +195,21 @@
             // manualDeUsuarioToolStripMenuItem
             // 
             this.manualDeUsuarioToolStripMenuItem.Name = "manualDeUsuarioToolStripMenuItem";
-            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualDeUsuarioToolStripMenuItem.Text = "Manual de usuario";
+            this.manualDeUsuarioToolStripMenuItem.Click += new System.EventHandler(this.manualDeUsuarioToolStripMenuItem_Click);
             // 
             // manualTecnicoToolStripMenuItem
             // 
             this.manualTecnicoToolStripMenuItem.Name = "manualTecnicoToolStripMenuItem";
-            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualTecnicoToolStripMenuItem.Text = "Manual tecnico";
+            this.manualTecnicoToolStripMenuItem.Click += new System.EventHandler(this.manualTecnicoToolStripMenuItem_Click);
             // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.acercaDeToolStripMenuItem.Text = "Acerca de...";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 

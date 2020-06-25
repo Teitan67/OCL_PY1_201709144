@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -295,5 +296,14 @@ namespace PY1_IDE_sql
             }
         }
 
+        private void manualTecnicoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("C:\\PY1\\ManualTecnico.pdf");
+        }
+
+        private void manualDeUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("C:\\PY1\\ManualDeUsuario.pdf");
+        }
     }
 }
